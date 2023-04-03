@@ -1,0 +1,64 @@
+.user-details {
+    width: 600px;
+    max-width: 90vw;
+    margin: 0 auto;
+}
+
+.go-back {
+    text-align: center;
+}
+
+.go-back a {
+    color: #000;
+    text-decoration: none;
+}
+
+.go-back a:hover {
+    color: #9494a5;
+    text-decoration: dotted;
+}
+
+.info-block {
+    padding-top: 50px;
+    text-align: center;
+    font-size: 26px;
+    font-weight: bold;
+}
+
+.user-name {
+    font-size: 30px;
+    font-weight: bold;
+    border-bottom: 2px solid #000;
+    padding-bottom: 4px;
+    margin-bottom: 24px;
+}
+
+.user-avatar {
+    float: left;
+    margin-right: 36px;
+    margin-bottom: 16px;
+    max-width: 250px;
+}
+
+.user-email {
+    font-size: 16px;
+    margin-bottom: 16px;
+}
+
+.user-email span{
+    margin-left: 16px;
+    color: #9494a5;
+}
+
+.user-info {
+    font-size: 14px;
+    font-style: italic;
+}
+
+.user-info p {
+    margin-bottom: 0.5em;
+}
+
+.user-info p:first-letter {
+    margin-left: 16px;
+}

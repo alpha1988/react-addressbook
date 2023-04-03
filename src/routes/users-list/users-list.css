@@ -34,12 +34,7 @@
     border-bottom: none;
 }
 
-.list-item .avatar {
-    overflow: hidden;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.list-item .user-avatar {
     margin-right: 20px;
     flex: 0 0 128px;
 }
@@ -54,6 +49,15 @@
 .list-item .info .name {
     font-size: 24px;
     margin-bottom: 8px;
+}
+
+.list-item .info .name a {
+    color: #000000;
+    text-decoration: none;
+}
+
+.list-item .info .name a:hover {
+    text-decoration: underline;
 }
 
 .list-item .info .email {

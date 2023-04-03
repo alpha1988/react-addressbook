@@ -6,6 +6,7 @@ import { UsersService } from "../../shared/services/users.service";
 import { useQuery } from "@tanstack/react-query";
 import { UsersListItem } from "../../shared/models/users-list-item";
 import { Link } from "react-router-dom";
+import { UserAvatar } from "../../shared/components/avatar/user-avatar";
 
 export function UsersList() {
 	const [showAddUserModal, setShowAddUserModal] = useState<boolean>();
@@ -24,13 +25,13 @@ export function UsersList() {
 		if (isSuccess && data) {
 			return data.map((user: UsersListItem) =>
 				<div className="list-item" key={user.id}>
-					<div className="avatar">
-						<Link to={`./${user.id}`}>
-							<img src={user.avatar} alt=""/>
-						</Link>
-					</div>
+					<UserAvatar avatarPath={user.avatar} link={`/user/${user.id}`} />
 					<div className="info">
-						<div className="name">{user.first_name} {user.last_name}</div>
+						<div className="name">
+							<Link to={`/user/${user.id}`}>
+								{user.first_name} {user.last_name}
+							</Link>
+						</div>
 						<div className="email">{user.email}</div>
 						<div className="short-info">
 							Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto
