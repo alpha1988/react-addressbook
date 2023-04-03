@@ -1,0 +1,1 @@
+export const ApiUrl = 'https://reqres.in/api';

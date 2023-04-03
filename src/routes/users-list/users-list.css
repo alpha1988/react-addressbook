@@ -1,0 +1,67 @@
+.users-list {
+    margin-top: 100px;
+}
+
+.searcher {
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+.searcher input[type="text"] {
+    border-radius: 3px;
+    margin-right: 10px;
+    border: 2px solid aquamarine;
+}
+
+.searcher button {
+    cursor: pointer;
+}
+
+.users-list {
+    margin: 0 auto;
+    padding-top: 50px;
+    max-width: 600px;
+}
+
+.list-item {
+    display: flex;
+    border-bottom: 1px solid #000;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+}
+
+.list-item:last-child {
+    border-bottom: none;
+}
+
+.list-item .avatar {
+    overflow: hidden;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 20px;
+    flex: 0 0 128px;
+}
+
+.list-item .info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+}
+
+.list-item .info .name {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.list-item .info .email {
+    font: 14px italic;
+    color: darkgray;
+    margin-bottom: 16px;
+}
+.list-item .info .short-info {
+    font-size: 12px;
+    font-style: italic;
+}
