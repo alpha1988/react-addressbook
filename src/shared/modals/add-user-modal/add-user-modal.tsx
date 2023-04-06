@@ -1,21 +1,45 @@
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
-import { FormEventHandler, useRef } from "react";
-import { ModalProps } from "react-bootstrap/Modal";
+import { FormEventHandler } from "react";
+import { AddUserModalPropsModel } from "./add-user-modal-props.model";
+import { addUser, updateUser } from "../../services/users.service";
+import { UserModel } from "../../models/user.model";
+import { useMutation } from "@tanstack/react-query";
 
-export function AddUserModal(props: ModalProps) {
-	const formRef = useRef(null);
+export function AddUserModal({show, onHide, userData, onSent}: AddUserModalPropsModel) {
+	const isEditMode = !!userData;
+
+	const {mutate, isLoading} = useMutation({
+		mutationFn: (userModel: UserModel) => {
+			return isEditMode ? updateUser(userModel) : addUser(userModel);
+		},
+		onSuccess: (data) => {
+			onSent && onSent(data);
+		},
+		onError: () => {
+			alert("there was an error")
+		},
+	});
+
 	const onSubmit: FormEventHandler<any> = (event) => {
 		event.preventDefault();
 
 		const formData = new FormData(event.target as HTMLFormElement);
 		const data = Object.fromEntries(formData);
 
-		// props.onHide(data);
-		return event.target;
+		const userModel: UserModel = {
+			description: data.description as string,
+			first_name: data.firstName as string,
+			last_name: data.lastName as string,
+			email: data.email as string,
+			avatar: data.avatar as string
+		};
+
+		mutate(userModel);
 	};
 
 	return (
-		<Modal {...props}
+		<Modal show={show}
+		       onHide={onHide}
 		       size="lg"
 		       aria-labelledby="contained-modal-title-vcenter"
 		       centered
@@ -40,10 +64,20 @@ export function AddUserModal(props: ModalProps) {
 							</Form.Group>
 						</Col>
 					</Row>
-					<Form.Group className="mb-3">
-						<Form.Label>Avatar Link</Form.Label>
-						<Form.Control type="text" name="avatar"/>
-					</Form.Group>
+					<Row className="mb-3">
+						<Col xs="6">
+							<Form.Group>
+								<Form.Label>Email</Form.Label>
+								<Form.Control type="text" name="email"/>
+							</Form.Group>
+						</Col>
+						<Col xs="6">
+							<Form.Group>
+								<Form.Label>Avatar Link</Form.Label>
+								<Form.Control type="text" name="avatar"/>
+							</Form.Group>
+						</Col>
+					</Row>
 					<Form.Group
 						className="mb-3"
 						controlId="exampleForm.ControlTextarea1"
@@ -55,7 +89,7 @@ export function AddUserModal(props: ModalProps) {
 			</Modal.Body>
 			<Modal.Footer>
 				<Button variant="primary" type="submit" form="user-form">Add</Button>
-				<Button variant="secondary" onClick={props.onHide}>Cancel</Button>
+				<Button variant="secondary" onClick={onHide}>Cancel</Button>
 			</Modal.Footer>
 		</Modal>
 	);

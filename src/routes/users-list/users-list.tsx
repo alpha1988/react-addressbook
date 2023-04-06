@@ -1,31 +1,63 @@
 import "./users-list.css";
-import { Button, Col, FormControl, Row } from "react-bootstrap";
+import { Button, Col, FormControl, Pagination, Row } from "react-bootstrap";
 import { AddUserModal } from "../../shared/modals/add-user-modal/add-user-modal";
 import { Suspense, useState } from "react";
-import { UsersService } from "../../shared/services/users.service";
+import { getList } from "../../shared/services/users.service";
 import { useQuery } from "@tanstack/react-query";
 import { UsersListItem } from "../../shared/models/users-list-item";
 import { Link } from "react-router-dom";
 import { UserAvatar } from "../../shared/components/avatar/user-avatar";
 
 export function UsersList() {
+	const perPage = 3;
+	const [page, setPage] = useState(1);
 	const [showAddUserModal, setShowAddUserModal] = useState<boolean>();
+	const [searchText, setSearchText] = useState<string>('');
+	const [users, setUsers] = useState([]);
+	const [pages, setPages] = useState(1);
 
 	const {data, isSuccess, isLoading} = useQuery({
-		queryKey: ['users'],
-		queryFn: () => UsersService.getList(),
-		select: (data) => data.data
+		queryKey: ['users', page, perPage, searchText],
+		queryFn: () => getList(page, perPage, searchText),
+		onSuccess: (data: any) => {
+			setUsers(data.items);
+			setPages(data.pages);
+		},
+		select: (data) => data.data as UsersListItem[]
 	});
 
+	const onUserAdded = () => {
+		setShowAddUserModal(false);
+	};
+
+	const searchTextChanged = (e: any): any => {
+		setPage(1);
+		setSearchText((e.target as HTMLInputElement).value);
+	};
+
+	const onPageChanged = (page: number) => {
+		setPage(page);
+	};
+
+	const renderPaginationItens = () => {
+		const list: any[] = [];
+		for (let i = 1; i < pages + 1; i++) {
+			list.push(
+				<Pagination.Item key={i} active={i === page} onClick={() => onPageChanged(i)}>{i}</Pagination.Item>);
+		}
+
+		return list;
+	};
+
 	const renderUsers = () => {
-		if (isLoading && !data) {
+		if (isLoading && !users) {
 			return <div>Loading ...</div>;
 		}
 
-		if (isSuccess && data) {
-			return data.map((user: UsersListItem) =>
+		if (isSuccess && users) {
+			return users.map((user: UsersListItem) =>
 				<div className="list-item" key={user.id}>
-					<UserAvatar avatarPath={user.avatar} link={`/user/${user.id}`} />
+					<UserAvatar avatarPath={user.avatar} link={`/user/${user.id}`}/>
 					<div className="info">
 						<div className="name">
 							<Link to={`/user/${user.id}`}>
@@ -34,9 +66,9 @@ export function UsersList() {
 						</div>
 						<div className="email">{user.email}</div>
 						<div className="short-info">
-							Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto
-							blanditiis dignissimos dolorum eos esse ex illum. Dolores eos, esse ex fugit molestiae omnis,
-							optio qui rem, rerum tenetur totam vero?
+							{user.description ?? <>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto blanditiis
+                  dignissimos dolorum eos esse ex illum. Dolores eos, esse ex fugit molestiae omnis, optio qui rem,
+                  rerum tenetur totam vero?</>}
 						</div>
 					</div>
 				</div>
@@ -51,6 +83,8 @@ export function UsersList() {
 			<Row className="searcher">
 				<Col xs="10">
 					<FormControl
+						value={searchText}
+						onChange={searchTextChanged}
 						placeholder="Type the User Name ..."
 						aria-label="Search"
 						aria-describedby="basic-addon1"
@@ -60,9 +94,15 @@ export function UsersList() {
 					<Button variant="primary" onClick={() => setShowAddUserModal(true)}>+ New</Button>
 				</Col>
 			</Row>
+
 			{renderUsers()}
+
+			<Pagination>{renderPaginationItens()}</Pagination>
+
 			<Suspense>
-				<AddUserModal show={showAddUserModal} onHide={() => setShowAddUserModal(false)}/>
+				<AddUserModal show={showAddUserModal}
+				              onHide={() => setShowAddUserModal(false)}
+				              onSent={onUserAdded}/>
 			</Suspense>
 		</section>
 	);

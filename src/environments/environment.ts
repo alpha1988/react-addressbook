@@ -1,1 +1,1 @@
-export const ApiUrl = 'https://reqres.in/api';
+export const ApiUrl = 'http://localhost:3000';

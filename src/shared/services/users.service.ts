@@ -1,13 +1,29 @@
 import { ApiUrl } from '../../environments/environment';
-import { UserInfoModel } from "../models/user-info.model";
+import { UserModel } from "../models/user.model";
+import axios from "axios";
 
-export function getList() {
-	return fetch(`${ApiUrl}/users`).then((res: Response) => res.json());
+export function getList(page = 1, perPage = 10, searchText: string) {
+	const params = {
+		searchText: searchText || null,
+		page,
+		perPage
+	};
+
+	return axios.get(`${ApiUrl}/users`, {
+		params
+	});
 }
 
-export function getUserInfo(userId = '1'): Promise<{data:UserInfoModel}> {
-	return fetch(`${ApiUrl}/users/${userId}`)
-		.then((res: Response) => res.json());
+export function getUserInfo(userId = '1') {
+	return axios.get(`${ApiUrl}/users/${userId}`);
+}
+
+export function addUser(user: UserModel) {
+	return axios.post(`${ApiUrl}/users`, user);
+}
+
+export function updateUser(user: UserModel) {
+	return axios.put(`${ApiUrl}/users/${user.id}`, user);
 }
 
 export * as UsersService from './users.service';

@@ -9,7 +9,13 @@ import { UsersList } from "./routes/users-list/users-list";
 import { User } from "./routes/user/user";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			refetchOnWindowFocus: false
+		}
+	}
+});
 
 const router = createBrowserRouter([
 	{
@@ -22,7 +28,7 @@ const router = createBrowserRouter([
 				element: <UsersList/>
 			},
 			{
-				path: 'user/:userId',
+				path: 'users/:userId',
 				element: <User/>
 			}
 		]

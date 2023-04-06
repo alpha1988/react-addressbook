@@ -4,4 +4,5 @@ export interface UsersListItem {
 	first_name: string;
 	last_name: string;
 	avatar: string;
+	description?: string;
 }

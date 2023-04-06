@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getUserInfo } from "../../shared/services/users.service";
 import { UserAvatar } from "../../shared/components/avatar/user-avatar";
+import { UserInfoModel } from "../../shared/models/user-info.model";
 
 export function User() {
 	const {userId} = useParams();
@@ -10,7 +11,7 @@ export function User() {
 	const {data, isLoading} = useQuery({
 		queryKey: ['user', userId],
 		queryFn: () => getUserInfo(userId),
-		select: (data) => data.data
+		select: (data) => data.data as UserInfoModel
 	});
 
 	const renderUserInfo = () => {
@@ -22,7 +23,7 @@ export function User() {
 			return (
 				<>
 					<div className="user-name">{data.first_name} {data.last_name}</div>
-					<UserAvatar avatarPath={data.avatar} />
+					<UserAvatar avatarPath={data.avatar}/>
 					<div className="user-email">Email: <span>{data.email}</span></div>
 					<div className="user-info">
 						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut commodi cupiditate debitis distinctio
