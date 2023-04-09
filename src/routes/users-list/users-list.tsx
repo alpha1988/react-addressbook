@@ -2,7 +2,7 @@ import "./users-list.css";
 import { Button, Col, FormControl, Pagination, Row } from "react-bootstrap";
 import { AddUserModal } from "../../shared/modals/add-user-modal/add-user-modal";
 import { Suspense, useState } from "react";
-import { getList } from "../../shared/services/users.service";
+import { getList } from "../../shared/services/users";
 import { useQuery } from "@tanstack/react-query";
 import { UsersListItem } from "../../shared/models/users-list-item";
 import { Link } from "react-router-dom";

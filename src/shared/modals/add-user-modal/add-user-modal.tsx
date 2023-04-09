@@ -1,7 +1,7 @@
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
 import { FormEventHandler } from "react";
 import { AddUserModalPropsModel } from "./add-user-modal-props.model";
-import { addUser, updateUser } from "../../services/users.service";
+import { addUser, updateUser } from "../../services/users";
 import { UserModel } from "../../models/user.model";
 import { useMutation } from "@tanstack/react-query";
 
