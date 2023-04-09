@@ -8,7 +8,7 @@ import { UsersListItem } from "../../types/users-list-item";
 import { Link } from "react-router-dom";
 import { UserAvatar } from "../../components/avatar/user-avatar";
 
-export function UsersList() {
+export const UsersList = () => {
 	const perPage = 3;
 	const [page, setPage] = useState(1);
 	const [showAddUserModal, setShowAddUserModal] = useState<boolean>();

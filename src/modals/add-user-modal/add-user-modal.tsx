@@ -1,14 +1,21 @@
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
 import { FormEventHandler } from "react";
-import { AddUserModalPropsModel } from "./add-user-modal-props.model";
 import { addUser, updateUser } from "../../services/users";
 import { UserModel } from "../../types/user.model";
 import { useMutation } from "@tanstack/react-query";
+import { UserInfoModel } from "../../types/user-info.model";
 
-export function AddUserModal({show, onHide, userData, onSent}: AddUserModalPropsModel) {
+interface AddUserModalProps {
+	show?: boolean;
+	onHide?: () => void;
+	onSent?: (...data: any) => void;
+	userData?: UserInfoModel
+}
+
+export const AddUserModal: React.FC<AddUserModalProps> = ({show, onHide, userData, onSent}) => {
 	const isEditMode = !!userData;
 
-	const {mutate, isLoading} = useMutation({
+	const {mutate} = useMutation({
 		mutationFn: (userModel: UserModel) => {
 			return isEditMode ? updateUser(userModel) : addUser(userModel);
 		},

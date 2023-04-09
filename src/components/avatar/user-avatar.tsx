@@ -1,8 +1,13 @@
 import './user-avatar.css';
-import { AvatarPropsModel } from "./avatar-props.model";
 import { Link } from "react-router-dom";
+import React from "react";
 
-export function UserAvatar({avatarPath, link}: AvatarPropsModel) {
+interface UserAvatarProps {
+	avatarPath: string;
+	link?: string;
+}
+
+export const UserAvatar: React.FC<UserAvatarProps> = ({avatarPath, link}) => {
 	const imgLayout = <img src={avatarPath} alt=""/>;
 	const layout = link ? <Link to={link}>{imgLayout}</Link> : imgLayout;
 

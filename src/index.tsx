@@ -1,10 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider, } from "react-router-dom";
-import './index.css';
 
 import { Root } from "./routes/root/root";
-import ErrorPage from "./routes/error-page/error-page";
+import { ErrorPage } from "./routes/error-page/error-page";
 import { UsersList } from "./routes/users-list/users-list";
 import { User } from "./routes/user/user";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
