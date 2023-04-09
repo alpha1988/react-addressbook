@@ -1,12 +1,12 @@
 import "./users-list.css";
 import { Button, Col, FormControl, Pagination, Row } from "react-bootstrap";
-import { AddUserModal } from "../../shared/modals/add-user-modal/add-user-modal";
+import { AddUserModal } from "../../modals/add-user-modal/add-user-modal";
 import { Suspense, useState } from "react";
-import { getList } from "../../shared/services/users";
+import { getList } from "../../services/users";
 import { useQuery } from "@tanstack/react-query";
-import { UsersListItem } from "../../shared/models/users-list-item";
+import { UsersListItem } from "../../types/users-list-item";
 import { Link } from "react-router-dom";
-import { UserAvatar } from "../../shared/components/avatar/user-avatar";
+import { UserAvatar } from "../../components/avatar/user-avatar";
 
 export function UsersList() {
 	const perPage = 3;

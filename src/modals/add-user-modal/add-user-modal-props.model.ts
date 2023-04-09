@@ -1,4 +1,4 @@
-import { UserInfoModel } from "../../models/user-info.model";
+import { UserInfoModel } from "../../types/user-info.model";
 
 export interface AddUserModalPropsModel {
 	show?: boolean;

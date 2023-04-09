@@ -1,9 +1,9 @@
 import './user.css';
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { getUserInfo } from "../../shared/services/users";
-import { UserAvatar } from "../../shared/components/avatar/user-avatar";
-import { UserInfoModel } from "../../shared/models/user-info.model";
+import { getUserInfo } from "../../services/users";
+import { UserAvatar } from "../../components/avatar/user-avatar";
+import { UserInfoModel } from "../../types/user-info.model";
 
 export function User() {
 	const {userId} = useParams();

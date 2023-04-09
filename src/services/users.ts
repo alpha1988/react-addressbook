@@ -1,5 +1,5 @@
-import { REACT_APP_API_URL } from '../../.env';
-import { UserModel } from "../models/user.model";
+import { REACT_APP_API_URL } from '../.env';
+import { UserModel } from "../types/user.model";
 import axios from "axios";
 
 export const getList = (page = 1, perPage = 10, searchText: string) => {
