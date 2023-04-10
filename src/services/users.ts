@@ -18,11 +18,11 @@ export const getUserInfo = (userId = '1') => {
 	return axios.get(`${REACT_APP_API_URL}/users/${userId}`);
 }
 
-export const addUser = (user: UserModel) => {
+export const addUser = (user: UserModel): Promise<UserModel> => {
 	return axios.post(`${REACT_APP_API_URL}/users`, user);
 }
 
-export const updateUser = (user: UserModel) => {
+export const updateUser = (user: UserModel): Promise<UserModel> => {
 	return axios.put(`${REACT_APP_API_URL}/users/${user.id}`, user);
 }
 

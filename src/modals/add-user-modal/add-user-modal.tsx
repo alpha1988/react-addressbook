@@ -8,18 +8,18 @@ import { UserInfoModel } from "../../types/user-info.model";
 interface AddUserModalProps {
 	show?: boolean;
 	onHide?: () => void;
-	onSent?: (...data: any) => void;
+	onSent?: (data?: UserModel) => void;
 	userData?: UserInfoModel
 }
 
 export const AddUserModal: React.FC<AddUserModalProps> = ({show, onHide, userData, onSent}) => {
-	const isEditMode = !!userData;
+	const isEditMode: boolean = !!userData;
 
 	const {mutate} = useMutation({
 		mutationFn: (userModel: UserModel) => {
 			return isEditMode ? updateUser(userModel) : addUser(userModel);
 		},
-		onSuccess: (data) => {
+		onSuccess: (data: UserModel) => {
 			onSent && onSent(data);
 		},
 		onError: () => {
@@ -27,7 +27,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({show, onHide, userDat
 		},
 	});
 
-	const onSubmit: FormEventHandler<any> = (event) => {
+	const onSubmit: FormEventHandler<HTMLFormElement> = (event): void => {
 		event.preventDefault();
 
 		const formData = new FormData(event.target as HTMLFormElement);
