@@ -4,7 +4,7 @@ import { ErrorPage } from "./routes/error-page/error-page";
 import { UsersList } from "./routes/users-list/users-list";
 import { User } from "./routes/user/user";
 import React from "react";
-import { APP_ROUTES } from "./index-routing.constants";
+import { APP_ROUTES } from "./constants/index-routing.constants";
 
 export const router = createBrowserRouter([
 	{
