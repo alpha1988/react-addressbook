@@ -1,10 +1,10 @@
 import { useRouteError } from "react-router-dom";
 import './error-page.css';
 
-type ErrorResponse = {
+interface ErrorResponse {
 	statusText?: string;
 	message?: string;
-};
+}
 
 export const ErrorPage = () => {
 	const error = useRouteError() as ErrorResponse;
