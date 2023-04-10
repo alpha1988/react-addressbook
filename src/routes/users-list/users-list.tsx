@@ -1,46 +1,49 @@
 import "./users-list.css";
 import { Button, Col, FormControl, Pagination, Row } from "react-bootstrap";
 import { AddUserModal } from "../../modals/add-user-modal/add-user-modal";
+import * as React from "react";
 import { Suspense, useState } from "react";
 import { getList } from "../../services/users";
 import { useQuery } from "@tanstack/react-query";
 import { UsersListItem } from "../../types/users-list-item";
 import { Link } from "react-router-dom";
 import { UserAvatar } from "../../components/avatar/user-avatar";
+import { UsersListResponse } from "../../types/users-list-response";
 
 export const UsersList = () => {
 	const perPage = 3;
 	const [page, setPage] = useState(1);
-	const [showAddUserModal, setShowAddUserModal] = useState<boolean>();
+	const [showAddUserModal, setShowAddUserModal] = useState(false);
 	const [searchText, setSearchText] = useState<string>('');
-	const [users, setUsers] = useState([]);
+	const [users, setUsers] = useState<UsersListItem[]>([]);
 	const [pages, setPages] = useState(1);
 
-	const {data, isSuccess, isLoading} = useQuery({
+	const {isSuccess, isLoading} = useQuery({
 		queryKey: ['users', page, perPage, searchText],
 		queryFn: () => getList(page, perPage, searchText),
-		onSuccess: (data: any) => {
+		onSuccess: (data: UsersListResponse) => {
 			setUsers(data.items);
 			setPages(data.pages);
 		},
-		select: (data) => data.data as UsersListItem[]
+		select: (data) => data.data as UsersListResponse
 	});
 
 	const onUserAdded = () => {
 		setShowAddUserModal(false);
 	};
 
-	const searchTextChanged = (e: any): any => {
+	const searchTextChanged: React.ChangeEventHandler<HTMLInputElement> = (e): void => {
 		setPage(1);
-		setSearchText((e.target as HTMLInputElement).value);
+		setSearchText((e.target).value);
 	};
 
-	const onPageChanged = (page: number) => {
+	const onPageChanged = (page: number): void => {
 		setPage(page);
 	};
 
-	const renderPaginationItens = () => {
-		const list: any[] = [];
+	const renderPaginationItens = (): JSX.Element[] => {
+		const list: JSX.Element[] = [];
+
 		for (let i = 1; i < pages + 1; i++) {
 			list.push(
 				<Pagination.Item key={i} active={i === page} onClick={() => onPageChanged(i)}>{i}</Pagination.Item>);
@@ -49,7 +52,7 @@ export const UsersList = () => {
 		return list;
 	};
 
-	const renderUsers = () => {
+	const renderUsers = (): JSX.Element | JSX.Element[] => {
 		if (isLoading && !users) {
 			return <div>Loading ...</div>;
 		}

@@ -19,7 +19,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({show, onHide, userDat
 		mutationFn: (userModel: UserModel) => {
 			return isEditMode ? updateUser(userModel) : addUser(userModel);
 		},
-		onSuccess: (data: UserModel) => {
+		onSuccess: ({data}) => {
 			onSent && onSent(data);
 		},
 		onError: () => {
