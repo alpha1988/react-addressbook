@@ -1,8 +1,8 @@
-import { UsersListItem } from "./users-list-item";
+import { UsersListItemModel } from "./users-list-item-model";
 
 export interface UsersListResponse {
 	page: number;
 	perPage: number;
 	pages: number;
-	items: UsersListItem[];
+	items: UsersListItemModel[];
 }

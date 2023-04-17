@@ -1,4 +1,4 @@
-export interface UsersListItem {
+export interface UsersListItemModel {
 	id: number;
 	email: string;
 	first_name: string;
