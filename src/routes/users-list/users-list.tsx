@@ -8,15 +8,15 @@ import { UsersListItemModel } from "../../types/users-list-item-model";
 import { UsersListResponse } from "../../types/users-list-response";
 import { AddUserModal } from "../../modals/add-user-modal/add-user-modal";
 import { usersAction } from "../../features/users/users-slice";
-import { activeModalUser, usersList } from "../../features/users/selectors";
+import { updatedUser, usersList } from "../../features/users/selectors";
 import { UsersListItem } from "./components/users-list-item/users-list-item";
 import { useDispatch, useSelector } from "react-redux";
-import { activeUserActions } from "../../features/users/modal-active-user-slice";
+import { updatedUserActions } from "../../features/users/updated-user-slice";
 
 export const UsersList = () => {
 	const dispatch = useDispatch();
 	const users: UsersListItemModel[] = useSelector(usersList);
-	const activeUser: null | UsersListItemModel = useSelector(activeModalUser);
+	const activeUser: null | UsersListItemModel = useSelector(updatedUser);
 	const perPage = 3;
 	const [page, setPage] = useState(1);
 	const [showAddUserModal, setShowAddUserModal] = useState(false);
@@ -61,12 +61,12 @@ export const UsersList = () => {
 	};
 
 	const editUser = (user: UsersListItemModel): void => {
-		dispatch({type: activeUserActions.setInfo, payload: user});
+		dispatch({type: updatedUserActions.setInfo, payload: user});
 		setShowAddUserModal(true);
 	};
 
 	const onUserUpdated = () => {
-		dispatch({type: activeUserActions.setInfo, payload: null});
+		dispatch({type: updatedUserActions.setInfo, payload: null});
 		setShowAddUserModal(false);
 		refetch();
 	};

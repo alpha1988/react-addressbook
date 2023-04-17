@@ -4,7 +4,7 @@ const initialState = {
 	value: <UsersListItemModel | null>null
 };
 
-export const activeUserActions = {
+export const updatedUserActions = {
 	setInfo: 'activeUser/set',
 	update: 'activeUser/update'
 };
@@ -17,12 +17,12 @@ const defaultEmptyModel = {
 	email: ''
 };
 
-export const ModalActiveUserSlice = (state = initialState, action: any) => {
+export const UpdatedUserSlice = (state = initialState, action: any) => {
 	switch (action.type) {
-		case activeUserActions.setInfo: {
+		case updatedUserActions.setInfo: {
 			return {...state, value: action.payload};
 		}
-		case activeUserActions.update: {
+		case updatedUserActions.update: {
 			const newValue = {[action.payload.key]: action.payload.value};
 			const newPayload = state.value === null ? {...defaultEmptyModel, ...newValue} : {...state.value, ...newValue};
 

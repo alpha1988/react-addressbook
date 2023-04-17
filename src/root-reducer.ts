@@ -1,8 +1,8 @@
 import { combineReducers } from "redux";
 import { UsersSlice } from "./features/users/users-slice";
-import { ModalActiveUserSlice } from "./features/users/modal-active-user-slice";
+import { UpdatedUserSlice } from "./features/users/updated-user-slice";
 
 export const rootReducer = combineReducers({
 	users: UsersSlice,
-	activeUser: ModalActiveUserSlice
+	updatedUser: UpdatedUserSlice
 });

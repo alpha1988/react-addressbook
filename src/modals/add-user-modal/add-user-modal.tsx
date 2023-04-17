@@ -4,8 +4,8 @@ import { addUser, updateUser } from "../../services/users";
 import { UserModel } from "../../types/user.model";
 import { useMutation } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
-import { activeModalUser } from "../../features/users/selectors";
-import { activeUserActions } from "../../features/users/modal-active-user-slice";
+import { updatedUser } from "../../features/users/selectors";
+import { updatedUserActions } from "../../features/users/updated-user-slice";
 
 interface AddUserModalProps {
 	show?: boolean;
@@ -15,9 +15,8 @@ interface AddUserModalProps {
 
 export const AddUserModal: React.FC<AddUserModalProps> = ({show, onHide, onSent}) => {
 	const dispatch = useDispatch();
-	const userData = useSelector(activeModalUser);
+	const userData = useSelector(updatedUser);
 	const isEditMode: boolean = !!userData;
-	const id = userData?.id;
 
 	const {mutate} = useMutation({
 		mutationFn: (userModel: UserModel) => {
@@ -39,7 +38,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({show, onHide, onSent}
 
 	const changeModal = (key: string, value: string) => {
 		dispatch({
-			type: activeUserActions.update,
+			type: updatedUserActions.update,
 			payload: {key, value}
 		});
 	};
@@ -112,7 +111,7 @@ export const AddUserModal: React.FC<AddUserModalProps> = ({show, onHide, onSent}
 				</Form>
 			</Modal.Body>
 			<Modal.Footer>
-				<Button variant="primary" type="submit" form="user-form">Add</Button>
+				<Button variant="primary" type="submit" form="user-form">{isEditMode? 'Add' : 'Update'}</Button>
 				<Button variant="secondary" onClick={onHide}>Cancel</Button>
 			</Modal.Footer>
 		</Modal>
