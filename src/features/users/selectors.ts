@@ -7,3 +7,7 @@ export const usersList = (state: RootState) => {
 export const updatedUser = (state: RootState) => {
 	return state.updatedUser.value;
 };
+
+export const activeUser = (state: RootState) => {
+	return state.activeUser.value;
+};
