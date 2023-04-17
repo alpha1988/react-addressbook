@@ -1,46 +1,50 @@
 import "./users-list.css";
 import { Button, Col, FormControl, Pagination, Row } from "react-bootstrap";
-import { AddUserModal } from "../../shared/modals/add-user-modal/add-user-modal";
-import { Suspense, useState } from "react";
-import { getList } from "../../shared/services/users.service";
+import * as React from "react";
+import { useState } from "react";
+import { getList } from "../../services/users";
 import { useQuery } from "@tanstack/react-query";
-import { UsersListItem } from "../../shared/models/users-list-item";
+import { UsersListItem } from "../../types/users-list-item";
 import { Link } from "react-router-dom";
-import { UserAvatar } from "../../shared/components/avatar/user-avatar";
+import { UserAvatar } from "../../components/avatar/user-avatar";
+import { UsersListResponse } from "../../types/users-list-response";
+import { AddUserModal } from "../../modals/add-user-modal/add-user-modal";
 
-export function UsersList() {
+export const UsersList = () => {
 	const perPage = 3;
 	const [page, setPage] = useState(1);
-	const [showAddUserModal, setShowAddUserModal] = useState<boolean>();
+	const [showAddUserModal, setShowAddUserModal] = useState(false);
 	const [searchText, setSearchText] = useState<string>('');
-	const [users, setUsers] = useState([]);
+	const [users, setUsers] = useState<UsersListItem[]>([]);
 	const [pages, setPages] = useState(1);
+	const [activeUser, setActiveUser] = useState<null | UsersListItem>();
 
-	const {data, isSuccess, isLoading} = useQuery({
+	const {isSuccess, isLoading, refetch} = useQuery({
 		queryKey: ['users', page, perPage, searchText],
 		queryFn: () => getList(page, perPage, searchText),
-		onSuccess: (data: any) => {
+		onSuccess: (data: UsersListResponse) => {
 			setUsers(data.items);
 			setPages(data.pages);
 		},
-		select: (data) => data.data as UsersListItem[]
+		select: (data) => data.data as UsersListResponse
 	});
 
 	const onUserAdded = () => {
 		setShowAddUserModal(false);
 	};
 
-	const searchTextChanged = (e: any): any => {
+	const searchTextChanged: React.ChangeEventHandler<HTMLInputElement> = (e): void => {
 		setPage(1);
-		setSearchText((e.target as HTMLInputElement).value);
+		setSearchText((e.target).value);
 	};
 
-	const onPageChanged = (page: number) => {
+	const onPageChanged = (page: number): void => {
 		setPage(page);
 	};
 
-	const renderPaginationItens = () => {
-		const list: any[] = [];
+	const renderPaginationItems = (): JSX.Element[] => {
+		const list: JSX.Element[] = [];
+
 		for (let i = 1; i < pages + 1; i++) {
 			list.push(
 				<Pagination.Item key={i} active={i === page} onClick={() => onPageChanged(i)}>{i}</Pagination.Item>);
@@ -49,7 +53,18 @@ export function UsersList() {
 		return list;
 	};
 
-	const renderUsers = () => {
+	const editUser = (user: UsersListItem): void => {
+		setActiveUser(user);
+		setShowAddUserModal(true);
+	};
+
+	const onUserUpdated = () => {
+		setActiveUser(null);
+		setShowAddUserModal(false);
+		refetch();
+	};
+
+	const renderUsers = (): JSX.Element | JSX.Element[] => {
 		if (isLoading && !users) {
 			return <div>Loading ...</div>;
 		}
@@ -57,12 +72,13 @@ export function UsersList() {
 		if (isSuccess && users) {
 			return users.map((user: UsersListItem) =>
 				<div className="list-item" key={user.id}>
-					<UserAvatar avatarPath={user.avatar} link={`/user/${user.id}`}/>
+					<UserAvatar avatarPath={user.avatar} link={`/users/${user.id}`}/>
 					<div className="info">
 						<div className="name">
-							<Link to={`/user/${user.id}`}>
+							<Link to={`/users/${user.id}`}>
 								{user.first_name} {user.last_name}
 							</Link>
+							<Button className="edit-btn" variant="link" onClick={() => editUser(user)}>Edit</Button>
 						</div>
 						<div className="email">{user.email}</div>
 						<div className="short-info">
@@ -97,13 +113,14 @@ export function UsersList() {
 
 			{renderUsers()}
 
-			<Pagination>{renderPaginationItens()}</Pagination>
+			<Pagination>{renderPaginationItems()}</Pagination>
 
-			<Suspense>
-				<AddUserModal show={showAddUserModal}
-				              onHide={() => setShowAddUserModal(false)}
-				              onSent={onUserAdded}/>
-			</Suspense>
+			{showAddUserModal &&
+      <AddUserModal show={showAddUserModal}
+                    onHide={() => setShowAddUserModal(false)}
+                    onSent={activeUser ? onUserUpdated : onUserAdded}
+                    userData={activeUser}/>
+			}
 		</section>
 	);
 }
