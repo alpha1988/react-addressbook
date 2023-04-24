@@ -1,0 +1,57 @@
+.list-item {
+    display: flex;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+}
+
+.list-item .user-avatar {
+    margin-right: 20px;
+    flex: 0 0 128px;
+}
+
+.list-item .info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+}
+
+.list-item .info .name {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.list-item .info .name a {
+    color: #000000;
+    text-decoration: none;
+}
+
+.list-item .info .name a:hover {
+    text-decoration: underline;
+}
+
+.list-item .info .edit-btn {
+    text-decoration: none;
+    font-size: 14px;
+    font-style: italic;
+    color: #9494a5;
+    padding: 0;
+    margin-left: 16px;
+}
+
+.list-item .info .edit-btn:hover {
+    text-decoration: underline;
+    color: #000;
+    font-style: normal;
+}
+
+.list-item .info .email {
+    font: 14px italic;
+    color: darkgray;
+    margin-bottom: 16px;
+}
+
+.list-item .info .short-info {
+    font-size: 12px;
+    font-style: italic;
+}

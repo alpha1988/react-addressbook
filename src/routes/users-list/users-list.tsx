@@ -4,26 +4,33 @@ import * as React from "react";
 import { useState } from "react";
 import { getList } from "../../services/users";
 import { useQuery } from "@tanstack/react-query";
-import { UsersListItem } from "../../types/users-list-item";
-import { Link } from "react-router-dom";
-import { UserAvatar } from "../../components/avatar/user-avatar";
+import { UsersListItemModel } from "../../types/users-list-item-model";
 import { UsersListResponse } from "../../types/users-list-response";
 import { AddUserModal } from "../../modals/add-user-modal/add-user-modal";
+import { usersAction } from "../../features/users/users-slice";
+import { updatedUser, usersList } from "../../features/users/selectors";
+import { UsersListItem } from "./components/users-list-item/users-list-item";
+import { useDispatch, useSelector } from "react-redux";
+import { updatedUserActions } from "../../features/users/updated-user-slice";
 
 export const UsersList = () => {
+	const dispatch = useDispatch();
+	const users: UsersListItemModel[] = useSelector(usersList);
+	const activeUser: null | UsersListItemModel = useSelector(updatedUser);
 	const perPage = 3;
 	const [page, setPage] = useState(1);
 	const [showAddUserModal, setShowAddUserModal] = useState(false);
 	const [searchText, setSearchText] = useState<string>('');
-	const [users, setUsers] = useState<UsersListItem[]>([]);
 	const [pages, setPages] = useState(1);
-	const [activeUser, setActiveUser] = useState<null | UsersListItem>();
 
 	const {isSuccess, isLoading, refetch} = useQuery({
 		queryKey: ['users', page, perPage, searchText],
 		queryFn: () => getList(page, perPage, searchText),
 		onSuccess: (data: UsersListResponse) => {
-			setUsers(data.items);
+			dispatch({
+				type: usersAction.setList,
+				payload: data.items
+			});
 			setPages(data.pages);
 		},
 		select: (data) => data.data as UsersListResponse
@@ -53,13 +60,13 @@ export const UsersList = () => {
 		return list;
 	};
 
-	const editUser = (user: UsersListItem): void => {
-		setActiveUser(user);
+	const editUser = (user: UsersListItemModel): void => {
+		dispatch({type: updatedUserActions.setInfo, payload: user});
 		setShowAddUserModal(true);
 	};
 
 	const onUserUpdated = () => {
-		setActiveUser(null);
+		dispatch({type: updatedUserActions.setInfo, payload: null});
 		setShowAddUserModal(false);
 		refetch();
 	};
@@ -70,25 +77,7 @@ export const UsersList = () => {
 		}
 
 		if (isSuccess && users) {
-			return users.map((user: UsersListItem) =>
-				<div className="list-item" key={user.id}>
-					<UserAvatar avatarPath={user.avatar} link={`/users/${user.id}`}/>
-					<div className="info">
-						<div className="name">
-							<Link to={`/users/${user.id}`}>
-								{user.first_name} {user.last_name}
-							</Link>
-							<Button className="edit-btn" variant="link" onClick={() => editUser(user)}>Edit</Button>
-						</div>
-						<div className="email">{user.email}</div>
-						<div className="short-info">
-							{user.description ?? <>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Architecto blanditiis
-                  dignissimos dolorum eos esse ex illum. Dolores eos, esse ex fugit molestiae omnis, optio qui rem,
-                  rerum tenetur totam vero?</>}
-						</div>
-					</div>
-				</div>
-			);
+			return users.map((user: UsersListItemModel) => <UsersListItem key={user.id} user={user} editUser={editUser}/>);
 		}
 
 		return <div>No users</div>;
@@ -118,8 +107,7 @@ export const UsersList = () => {
 			{showAddUserModal &&
       <AddUserModal show={showAddUserModal}
                     onHide={() => setShowAddUserModal(false)}
-                    onSent={activeUser ? onUserUpdated : onUserAdded}
-                    userData={activeUser}/>
+                    onSent={activeUser ? onUserUpdated : onUserAdded} />
 			}
 		</section>
 	);

@@ -4,14 +4,22 @@ import { useQuery } from "@tanstack/react-query";
 import { getUserInfo } from "../../services/users";
 import { UserAvatar } from "../../components/avatar/user-avatar";
 import { UserInfoModel } from "../../types/user-info.model";
+import { useDispatch, useSelector } from "react-redux";
+import { activeUser } from "../../features/users/selectors";
+import { activeUserActions } from "../../features/users/active-user-slice";
 
 export const User = () => {
 	const {userId} = useParams();
+	const dispatch = useDispatch();
+	const userInfo = useSelector(activeUser);
 
-	const {data, isLoading} = useQuery({
+	const {isLoading} = useQuery({
 		queryKey: ['user', userId],
 		queryFn: () => getUserInfo(userId),
-		select: (data) => data.data as UserInfoModel
+		select: (data) => data.data as UserInfoModel,
+		onSuccess: (data) => {
+			dispatch({type: activeUserActions.setInfo, payload: data});
+		}
 	});
 
 	const renderUserInfo = () => {
@@ -19,13 +27,13 @@ export const User = () => {
 			return <div className="info-block">Loading...</div>
 		}
 
-		if (data) {
+		if (userInfo) {
 			return (
 				<>
-					<div className="user-name">{data.first_name} {data.last_name}</div>
-					<UserAvatar avatarPath={data.avatar}/>
-					<div className="user-email">Email: <span>{data.email}</span></div>
-					<div className="user-info">{data?.description}</div>
+					<div className="user-name">{userInfo.first_name} {userInfo.last_name}</div>
+					<UserAvatar avatarPath={userInfo.avatar}/>
+					<div className="user-email">Email: <span>{userInfo.email}</span></div>
+					<div className="user-info">{userInfo?.description}</div>
 				</>
 			);
 		}
